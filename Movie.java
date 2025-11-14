@@ -102,6 +102,10 @@ public class Movie {
         return list;
     }
 
+    public static ArrayList<Movie> loadFromCsv() {
+        return loadFromCsv("data/movies.csv");
+    }
+
     @Override
     public String toString() {
         return id + " - " + title + " (" + type + ", " + year + ", " + rating + ")";
