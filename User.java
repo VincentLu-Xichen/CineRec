@@ -1,3 +1,6 @@
+import java.util.Map;
+import java.util.HashMap;
+
 public class User{
     private String userName;
     private String password;
