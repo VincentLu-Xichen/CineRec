@@ -130,4 +130,44 @@ public class User {
             }
         }
     }
+    //Functionality for creating a new user account.(consists of new username and new password)
+    public boolean createNewUser(String username, String password,HashMap<String, User> users) {
+        // check the new username
+        if(username == null||username.equals("")) {return false;}
+        if(users.containsKey(username)) {
+            System.out.println("[WARN] Username already exists: " + username);
+            return false;
+        }
+        // check the password
+        if(password == null || password.equals("")) {
+            System.out.println("[WARN] Password cannot be empty");
+            return false;
+        }
+        // Create the new user account
+        User newUser = new User(username, password);
+        users.put(username, newUser);
+        System.out.println("User created successfully!");
+        return true;
+    }
+
+    //Functionality for changing a user's password.
+    public boolean changePassword(String oldPassword, String newPassword) {
+        if( !this.password.equals(oldPassword)){
+            System.out.println("[WARN] Old password is incorrect!");
+            return false;}
+        if(newPassword == null || newPassword.equals("")) {
+            System.out.println("[WARN] New password cannot be empty");
+            return false;
+        }
+        this.password = newPassword;
+        return true;
+    }
+    // The overloading of the method "changePassword"
+    public boolean changePassword(String oldPassword, String newPassword, String confirmPassword) {
+        if(!confirmPassword.equals(newPassword)){
+            System.out.println("[WARN] Two passwords don't match!");
+            return false;
+        }
+        return changePassword(oldPassword, newPassword);
+    }
 }
