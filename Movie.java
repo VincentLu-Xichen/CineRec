@@ -60,10 +60,14 @@ public class Movie {
         // 依次读取各列，并用 trim() 去掉两端空白
         String id = parts[0].trim();
         String title = parts[1].trim();
-        String type = parts[2].trim(); // 第三列：类型（去除前后空白）
+        String type = parts[2].trim();
         int year = Integer.parseInt(parts[3].trim()); // 第四列：年份（转为整数）
         double rating = Double.parseDouble(parts[4].trim()); // 第五列：评分（转为小数）
-        return new Movie(id, title, type, year, rating);
+        String g = type.toLowerCase();
+        if (g.equals("biography") || g.equals("documentary")) {
+            return new Documentary(id, title, type, year, rating);
+        }
+        return new FeatureFilm(id, title, type, year, rating);
     }
 
     /**
