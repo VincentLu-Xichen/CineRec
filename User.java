@@ -20,6 +20,13 @@ public class User {
         this.history = new History();
     }
 
+    public User02(String userName, String password, Watchlist watchlist, History history) {
+        this.userName = userName;
+        this.password = password;
+        this.watchlist = watchlist;
+        this.history = history;
+    }
+
     public String getUserName() {
         return userName;
     }
@@ -60,7 +67,10 @@ public class User {
     public static HashMap<String, User> loadUsers(String path,List<Movie> allMovies) {
         HashMap<String, User> users = new HashMap<>(); // Create a new map to store all users
         File file = new File(path);
-        if (!file.exists()) {return users;}
+        if (!file.exists()) {
+            System.out.println("The file is not found.");
+            return users;
+        }
         BufferedReader br = null; // Declare a "Reader" variable,it will be initialized in "try"
         try {
             br = new BufferedReader(new FileReader(file));
@@ -72,7 +82,7 @@ public class User {
                     continue;  /* If it is the first row"username,password,watchlist,history",
                                   do not habdle.*/
                 }
-                String[] parts = line.split(",", -1); //"-1" is used to save the blank field
+                String[] parts = line.split(",", 4); 
                 if (parts.length < 4) {continue;}
                 String username = parts[0].trim();
                 String password = parts[1].trim();
@@ -85,7 +95,7 @@ public class User {
                 wl.mergeFromCsv(watchlistCsv); // eg: Add "M008;M015;M071;M048;M056" to the list
 
                 History his = new History();
-                his.mergeFromCsvWithDate(historyCsv);
+                his.mergeFromCsvWithDate(historyCsv,allMovies);
 
                 user.setWatchlist(wl);
                 user.setHistory(his);
