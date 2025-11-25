@@ -20,6 +20,13 @@ public class User {
         this.history = new History();
     }
 
+    public User(String userName, String password, Watchlist watchlist, History history) {
+        this.userName = userName;
+        this.password = password;
+        this.watchlist = watchlist;
+        this.history = history;
+    }
+
     public String getUserName() {
         return userName;
     }
@@ -60,7 +67,10 @@ public class User {
     public static HashMap<String, User> loadUsers(String path,List<Movie> allMovies) {
         HashMap<String, User> users = new HashMap<>(); // Create a new map to store all users
         File file = new File(path);
-        if (!file.exists()) {return users;}
+        if (!file.exists()) {
+            System.out.println("The file is not found.");
+            return users;
+        }
         BufferedReader br = null; // Declare a "Reader" variable,it will be initialized in "try"
         try {
             br = new BufferedReader(new FileReader(file));
@@ -72,25 +82,26 @@ public class User {
                     continue;  /* If it is the first row"username,password,watchlist,history",
                                   do not habdle.*/
                 }
-                String[] parts = line.split(",", -1); //"-1" is used to save the blank field
+                String[] parts = line.split(",", 4);
                 if (parts.length < 4) {continue;}
                 String username = parts[0].trim();
                 String password = parts[1].trim();
                 String watchlistCsv = parts[2].trim();
-                String historyCsv = parts[3].trim();
+                String historyCsv = parts[3].trim();//把文件里面的内容读成四个String
 
                 User user = new User(username, password);// Create User's object
 
                 Watchlist wl = new Watchlist();
-                wl.mergeFromCsv(watchlistCsv); // eg: Add "M008;M015;M071;M048;M056" to the list
+                wl.mergeFromCsv(watchlistCsv); // eg: Add "M008;M015;M071;M048;M056" to the list，把watchlistCsv里面的内容加入到新的Watchlist对象wl里面（涉及到一个加入的方法）
 
-                History his = new History();
-                his.mergeFromCsvWithDate(historyCsv);
 
-                user.setWatchlist(wl);
-                user.setHistory(his);
+                History his = new History();//要该这里的初始化，这里相当于是使用了无参构造，在进行后续添加！！！
+                his.mergeFromCsvWithDate(historyCsv,allMovies);//添加内容到这个用户的History对象his里面
 
-                users.put(username, user); // Store in the map."Username" is key.
+                user.setWatchlist(wl);//修改Watchlist
+                user.setHistory(his);//修改setHistory
+
+                users.put(username, user); // Store in the map."Username" is key. 修改这个map，即完成数据的更新
             }
         } catch (IOException e) {
             System.out.println("[WARN] Failed to read users: " + e.getMessage());
@@ -129,5 +140,45 @@ public class User {
             } catch (IOException ignored) {
             }
         }
+    }
+    //Functionality for creating a new user account.(consists of new username and new password)
+    public boolean createNewUser(String username, String password,HashMap<String, User> users) {
+        // check the new username
+        if(username == null||username.equals("")) {return false;}
+        if(users.containsKey(username)) {
+            System.out.println("[WARN] Username already exists: " + username);
+            return false;
+        }
+        // check the password
+        if(password == null || password.equals("")) {
+            System.out.println("[WARN] Password cannot be empty");
+            return false;
+        }
+        // Create the new user account
+        User newUser = new User(username, password);
+        users.put(username, newUser);
+        System.out.println("User created successfully!");
+        return true;
+    }
+
+    //Functionality for changing a user's password.
+    public boolean changePassword(String oldPassword, String newPassword) {
+        if( !this.password.equals(oldPassword)){
+            System.out.println("[WARN] Old password is incorrect!");
+            return false;}
+        if(newPassword == null || newPassword.equals("")) {
+            System.out.println("[WARN] New password cannot be empty");
+            return false;
+        }
+        this.password = newPassword;
+        return true;
+    }
+    // The overloading of the method "changePassword"
+    public boolean changePassword(String oldPassword, String newPassword, String confirmPassword) {
+        if(!confirmPassword.equals(newPassword)){
+            System.out.println("[WARN] Two passwords don't match!");
+            return false;
+        }
+        return changePassword(oldPassword, newPassword);
     }
 }
