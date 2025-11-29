@@ -37,18 +37,16 @@ public class History {
     public Map<String,String> getWatchedmap(){
         return movieAndtime;
     }
-    public int size() {
-        return getWatchedMovies().size();
-    }
 
     // Transfer to the CSV format
     public String toCsvString() {
         String id="";//初始化一个字符串id
         for (int i = 0; i < getWatchedMovies().size(); i++) {
-            id=id+getWatchedMovies().size()+";";
+            id=id+getWatchedMovies().get(i).getId()+"@"+movieAndtime.get(getWatchedMovies().get(i).getId())+";";
         }
-            if (!id.isEmpty()){
-            id=id.substring(0,id.length()-1);}
+        if(id.equals("")){id=";";}
+
+            id=id.substring(0,id.length()-1);
 
         return id;
     }
@@ -101,14 +99,14 @@ public class History {
         if (getWatchedMovies().isEmpty()) {
             return null;
         }
-        Map<String, Integer> genreCount = new HashMap<>();
+        java.util.Map<String, Integer> genreCount = new java.util.HashMap<>();
         for (Movie movie : getWatchedMovies()) {
             String genre = movie.getType();
             genreCount.put(genre, genreCount.getOrDefault(genre, 0) + 1);
         }
         String mostWatched = null;
         int maxCount = 0;
-        for (Map.Entry<String, Integer> entry : genreCount.entrySet()) {
+        for (java.util.Map.Entry<String, Integer> entry : genreCount.entrySet()) {
             if (entry.getValue() > maxCount) {
                 maxCount = entry.getValue();
                 mostWatched = entry.getKey();

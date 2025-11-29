@@ -44,13 +44,26 @@ public class Watchlist {
     }
 
     //csv conversion
-    public String toCsvString() {
-        String s="";
+    public String toCsvString2() {
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < movieIds.size(); i++) {
-            s=s+movieIds.get(i)+";";
+            if (i > 0) sb.append(";");
+            sb.append(movieIds.get(i));
         }
-        if (!s.isEmpty()) s=s.substring(0,s.length()-1);
-        return s;
+        return sb.toString();
+    }
+
+    public String toCsvString(){
+        String id="";//初始化一个字符串id
+        for (int i = 0; i < movieIds.size(); i++) {
+            id=id+movieIds.get(i)+";";
+        }
+        if(id.equals("")){id=";";}
+
+        id=id.substring(0,id.length()-1);
+
+        return id;
+
     }
 
     public void mergeFromCsv(String csvStr) {
