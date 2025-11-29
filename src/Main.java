@@ -96,6 +96,7 @@ public class Main {
         } else {
             System.out.println("Failed to create user. Please try again.");
         }
+        User.saveUsers(users, USER_FILE);
     }
 
     //Show menu for logged-in users (have included advanced feature: change password)
@@ -184,6 +185,7 @@ public class Main {
         } else {
             System.out.println("Movie is already in your watchlist.");
         }
+        User.saveUsers(users, USER_FILE);
     }
 
     //Remove a movie from watchlist
@@ -196,6 +198,7 @@ public class Main {
         } else {
             System.out.println("Movie not found in your watchlist.");
         }
+
     }
 
     //View watch history: purely based on History's map
@@ -244,6 +247,7 @@ public class Main {
         if (currentUser.getWatchlist().removeMovie(id)) {
             System.out.println("Also removed from your watchlist.");
         }
+
     }
 
     //Choose recommendation method
@@ -251,7 +255,7 @@ public class Main {
         System.out.println("-----please select the way you prefer for movie recommendation-----");
         System.out.println("1.By Year");
         System.out.println("2.By Rating");
-        System.out.println("3.By Genre");
+        System.out.println("3.According to your history");
         String choice = scanner.nextLine().trim();
 
         if ("1".equals(choice)) {
@@ -365,5 +369,6 @@ public class Main {
         } else {
             System.out.println("Failed to change password.");
         }
+
     }
 }
