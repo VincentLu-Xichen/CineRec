@@ -1,5 +1,6 @@
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 
 public class User {
     private String userName;

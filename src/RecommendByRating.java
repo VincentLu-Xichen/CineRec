@@ -1,4 +1,4 @@
-import java.util.*;
+import java.util.ArrayList;
 public class RecommendByRating {
     public static ArrayList<Movie> Regroup(User user) {
         ArrayList<Movie> Filtered = RecommendationEngine.FilteredMovies(user); //get the filtered movies
