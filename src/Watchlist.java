@@ -5,20 +5,20 @@ public class Watchlist {
     //store the movie id
     private List<String> movieIds;
     private List<Movie> movies = new ArrayList<>();
-    public Watchlist() {
+    public Watchlist() {//constructor without parameter
         this.movieIds = new ArrayList<>();
         this.movies =new ArrayList<>();
     }
 
-    public Watchlist(List<Movie> movies){
+    public Watchlist(List<Movie> movies){//constructor according to the List<Movie>
         this.movies=movies;
         movieIds=new ArrayList<>();
-        for (Movie movie:movies){
+        for (Movie movie:movies){//get the List of movieID
             movieIds.add(movie.getId());
         }
     }
-    //add movie id
-    public boolean addMovie(String movieId) {
+
+    public boolean addMovie(String movieId) {//add movie to movieID list
         if (!movieIds.contains(movieId)) {
             movieIds.add(movieId);
             return true;
@@ -31,7 +31,7 @@ public class Watchlist {
         return movieIds.remove(movieId);
     }
 
-    //obtain the list of id
+    //getter
     public List<String> getMovieIds() {
         return new ArrayList<>(movieIds);
     }
@@ -43,32 +43,25 @@ public class Watchlist {
         return new ArrayList<>(movies);
     }
 
-    //csv conversion
-    public String toCsvString2() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < movieIds.size(); i++) {
-            if (i > 0) sb.append(";");
-            sb.append(movieIds.get(i));
-        }
-        return sb.toString();
-    }
 
-    public String toCsvString(){
-        String id="";//初始化一个字符串id
+    public String toCsvString(){//csv conversion___ Example:M003;M009
+        String id="";
         for (int i = 0; i < movieIds.size(); i++) {
             id=id+movieIds.get(i)+";";
         }
-        if(id.equals("")){id=";";}
+        if(id.isEmpty()){id=";";}//prevent id.length()-1 is negative
 
-        id=id.substring(0,id.length()-1);
+        id=id.substring(0,id.length()-1);//remove the last ";"
 
-        return id;
+        return id;//finally,the id is same to the form of csv file
 
     }
 
-    public void mergeFromCsv(String csvStr) {
+    public void mergeFromCsv(String csvStr) {//use the csvString to initialize the watchlist object
+        //if csvString(watchlist)is not empty,than spilt each id into String[] ids
         if (csvStr != null && !csvStr.trim().isEmpty()) {
             String[] ids = csvStr.split(";");
+            //add all the movies id from the watchlist of the user to the movieId
             for (String id : ids) {
                 String trimmedId = id.trim();
                 if (!trimmedId.isEmpty() && !movieIds.contains(trimmedId)) {
