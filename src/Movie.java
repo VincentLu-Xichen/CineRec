@@ -1,3 +1,4 @@
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -107,7 +108,6 @@ public class Movie {
     public static ArrayList<Movie> loadFromCsv() {
         return loadFromCsv("data/movies.csv");
     }
-
     @Override
     public String toString() {
         return id + " - " + title + " (" + type + ", " + year + ", " + rating + ")";
