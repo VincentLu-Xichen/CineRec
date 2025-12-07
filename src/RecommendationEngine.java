@@ -110,7 +110,7 @@ public class RecommendationEngine {//Algorithm: Based on the proportion of user'
         ArrayList<Movie> result = new ArrayList<>();//The final sorted array to be returned as result
         List<Movie> allmovies=new ArrayList<>(allMovie());
         Set<String> repeat=new HashSet<>();//Set for deduplication
-        for (String typenumkey:typenum.keySet()) {//Control loop count
+        for (int loop = 0; loop < typenum.size(); loop++) {//Control loop count
             int max=0;
             String maxstring=null;
             for (String eachtype : typenum.keySet()) {//Calculate total sum, and find the most watched movie genre String maxstring, and its corresponding count int max
@@ -142,7 +142,6 @@ public class RecommendationEngine {//Algorithm: Based on the proportion of user'
        ArrayList<Movie> allmovies = GroupByG(user);
        ArrayList<Movie> historyandview = TOGhisANDview (user);
        ArrayList<Movie> filteredMovies = new ArrayList<>();
-       ArrayList<Movie> remove=new ArrayList<>();
        for (Movie all : allmovies) {//Iterate, and remove movies that exist in history and view from the main movie list
            boolean inhw=true;
            for (Movie HandW : historyandview) {

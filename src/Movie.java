@@ -1,22 +1,21 @@
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class Movie {
-    // Unique movie ID, e.g., "M001"
+    // Unique movie ID, e.g. "M001"
     private String id;
     // Movie title
     private String title;
-    // Genre, e.g., "Drama", "Action"
+    // Genre, e.g. "Drama", "Action"
     private String type;
     // Release year
     private int year;
     // Rating (0.0 ~ 10.0)
     private double rating;
 
-    // No-arg constructor (convenient for beginners and future extension)
+    // Default constructor (for beginners and future extensions)
     public Movie() {}
 
     // Parameterized constructor
@@ -28,7 +27,7 @@ public class Movie {
         this.rating = rating;
     }
 
-    // Basic getters / setters
+    // Basic getters/setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -45,43 +44,40 @@ public class Movie {
     public void setRating(double rating) { this.rating = rating; }
 
     /**
-     * Parse a Movie object from a CSV line.
+     * Parse Movie object from a CSV text line.
+     * Fixed format: id,title,genre,year,rating
      */
     public static Movie fromCsvRow(String row) {
         if (row == null) {
             throw new IllegalArgumentException("CSV row is empty");
         }
-        // Split into 5 columns by comma
+        // Split by comma into 5 columns
         String[] parts = row.split(",");
-        // Simple format check: must be exactly 5 columns
+        // Simple format validation: must have exactly 5 columns
         if (parts.length != 5) {
             throw new IllegalArgumentException("CSV format error, requires 5 columns");
         }
-        // Read columns sequentially and trim whitespace
+        // Read each column sequentially, and use trim() to remove leading/trailing whitespace
         String id = parts[0].trim();
         String title = parts[1].trim();
-        String type = parts[2].trim();
-        int year = Integer.parseInt(parts[3].trim()); // 4th column: Year (parsed as integer)
-        double rating = Double.parseDouble(parts[4].trim()); // 5th column: Rating (parsed as double)
-        String g = type.toLowerCase();
-        if (g.equals("biography") || g.equals("documentary")) {
-            return new Documentary(id, title, type, year, rating);
-        }
-        return new FeatureFilm(id, title, type, year, rating);
+        String type = parts[2].trim(); // Third column: genre (remove leading/trailing whitespace)
+        int year = Integer.parseInt(parts[3].trim()); // Fourth column: year (convert to integer)
+        double rating = Double.parseDouble(parts[4].trim()); // Fifth column: rating (convert to decimal)
+        return new Movie(id, title, type, year, rating);
     }
 
     /**
-     * Batch load movie list from CSV file. Automatically skip header if it starts with "id,".
+     * Batch load movie list from CSV file. Automatically skip first header row (if starts with "id,").
      */
     public static ArrayList<Movie> loadFromCsv(String csvPath) {
-        ArrayList<Movie> list = new ArrayList<Movie>(); // Store all loaded movies
+        ArrayList<Movie> list = new ArrayList<Movie>(); // Store all read movies
         BufferedReader br = null;
         try {
             br = new BufferedReader(new FileReader(csvPath)); // Open file and read line by line
             String line;
             boolean first = true;
             while ((line = br.readLine()) != null) {
-                line = line.trim(); // Trim whitespace from both ends
+                line = line.trim(); // Remove leading/trailing whitespace from each line
                 if (line.isEmpty()) continue; // Skip empty lines
                 if (first) {
                     first = false;
@@ -93,11 +89,11 @@ public class Movie {
                     Movie m = Movie.fromCsvRow(line); // Parse a line to generate Movie object
                     list.add(m);
                 } catch (Exception e) {
-                    System.err.println("Parse failed, skipping: " + line); // Invalid data, print info and skip
+                    System.err.println("Parse failed, skipping: " + line); // Invalid data line, print info and skip
                 }
             }
         } catch (IOException e) {
-            System.err.println("Failed to read file: " + e.getMessage());
+            System.err.println("File reading failed: " + e.getMessage());
         } finally {
             if (br != null) {
                 try { br.close(); } catch (IOException ignored) {} // Close file
@@ -106,8 +102,6 @@ public class Movie {
         return list;
     }
 
-    // 提供默认路径加载方法，方便直接调用
-    // 假设 CSV 文件在项目根目录下的 data 文件夹中，文件名为 movies.csv
     public static ArrayList<Movie> loadFromCsv() {
         return loadFromCsv("data/movies.csv");
     }
