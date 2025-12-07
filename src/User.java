@@ -5,9 +5,9 @@ import java.util.List;
 public class User {
     private String userName;
     private String password;
-    // "Watchlist" is another class, watchlist is an attribute of User
+    // "Watchlist" is another class; the user's watchlist is stored here
     private Watchlist watchlist;
-    // "History" is another class, history is an attribute of User
+    // "History" is another class; the user's viewing history is stored here
     private History history;
 
 
@@ -32,7 +32,7 @@ public class User {
         return userName;
     }
 
-    // This is a method,which user can change their username
+    // Method to change the username
     public void setUserName(String userName) {
         this.userName = userName;
     }
@@ -41,7 +41,7 @@ public class User {
         return password;
     }
 
-    // This is a method,which user can change their username
+    // Method to change the password
     public void setPassword(String password) {
         this.password = password;
     }
@@ -50,7 +50,7 @@ public class User {
         return watchlist;
     }
 
-    // This is a method that user can change their watchlist.
+    // Method to update the user's watchlist
     public void setWatchlist(Watchlist watchlist) {
         this.watchlist = watchlist;
     }
@@ -59,12 +59,12 @@ public class User {
         return history;
     }
 
-    // This is a method that user can change their watchlist.
+    // Method to update the user's history
     public void setHistory(History history) {
         this.history = history;
     }
 
-    // List<Movie> allMovies is used for a method that in History.
+    // The parameter allMovies is used by History to resolve movie IDs
     public static HashMap<String, User> loadUsers(String path,List<Movie> allMovies) {
         HashMap<String, User> users = new HashMap<>(); // Create a new map to store all users
         File file = new File(path);
@@ -72,7 +72,7 @@ public class User {
             System.out.println("The file is not found.");
             return users;
         }
-        BufferedReader br = null; // Declare a "Reader" variable,it will be initialized in "try"
+        BufferedReader br = null; // Declare the reader; initialize inside try
         try {
             br = new BufferedReader(new FileReader(file));
             String line;
@@ -80,32 +80,32 @@ public class User {
             while ((line = br.readLine()) != null) {
                 if (first) {
                     first = false;
-                    continue;  /* If it is the first row"username,password,watchlist,history",
-                                  do not habdle.*/
+                    continue;  /* If it is the header row "username,password,watchlist,history",
+                                  do not handle */
                 }
                 String[] parts = line.split(",", 4);
                 if (parts.length < 4) {continue;}
                 String username = parts[0].trim();
                 String password = parts[1].trim();
                 String watchlistCsv = parts[2].trim();
-                String historyCsv = parts[3].trim();//把文件里面的内容读成四个String
+                String historyCsv = parts[3].trim(); // Read these fields as four strings from the file
 
-                User user = new User(username, password);// Create User's object
+                User user = new User(username, password); // Create the User object
 
                 Watchlist wl = new Watchlist();
-                wl.mergeFromCsv(watchlistCsv); // eg: Add "M008;M015;M071;M048;M056" to the list，把watchlistCsv里面的内容加入到新的Watchlist对象wl里面（涉及到一个加入的方法）
+                wl.mergeFromCsv(watchlistCsv); // Load watchlist IDs from CSV into wl (e.g., M008;M015;...)
 
 
-                History his = new History();//要该这里的初始化，这里相当于是使用了无参构造，在进行后续添加！！！
-                his.mergeFromCsvWithDate(historyCsv,allMovies);//添加内容到这个用户的History对象his里面
+                History his = new History(); // Initialize history (no-arg constructor); entries are added below
+                his.mergeFromCsvWithDate(historyCsv,allMovies); // Load history entries with dates using allMovies
 
-                user.setWatchlist(wl);//修改Watchlist
-                user.setHistory(his);//修改setHistory
+                user.setWatchlist(wl); // Attach watchlist to user
+                user.setHistory(his); // Attach history to user
 
-                users.put(username, user); // Store in the map."Username" is key. 修改这个map，即完成数据的更新
+                users.put(username, user); // Store in the map with username as the key
             }
         } catch (IOException e) {
-            System.out.println("[WARN] Failed to read users: " + e.getMessage());
+            System.out.println("Failed to read users: " + e.getMessage());
         } finally {
             try {
                 if (br != null) br.close();
@@ -142,7 +142,7 @@ public class User {
             bw.flush();
             return true;
         } catch (IOException e) {
-            System.out.println("[WARN] Failed to save users: " + e.getMessage());
+            System.out.println("Failed to save users: " + e.getMessage());
             return false;
         } finally {
             try {
@@ -157,12 +157,12 @@ public class User {
         // check the new username
         if(username == null||username.equals("")) {return false;}
         if(users.containsKey(username)) {
-            System.out.println("[WARN] Username already exists: " + username);
+            System.out.println("Username already exists: " + username);
             return false;
         }
         // check the password
         if(password == null || password.equals("")) {
-            System.out.println("[WARN] Password cannot be empty");
+            System.out.println("Password cannot be empty");
             return false;
         }
         // Create the new user account
@@ -175,10 +175,10 @@ public class User {
     //Functionality for changing a user's password.
     public boolean changePassword(String oldPassword, String newPassword) {
         if( !this.password.equals(oldPassword)){
-            System.out.println("[WARN] Old password is incorrect!");
+            System.out.println("Old password is incorrect!");
             return false;}
         if(newPassword == null || newPassword.equals("")) {
-            System.out.println("[WARN] New password cannot be empty");
+            System.out.println("New password cannot be empty");
             return false;
         }
         this.password = newPassword;
@@ -187,7 +187,7 @@ public class User {
     // The overloading of the method "changePassword"
     public boolean changePassword(String oldPassword, String newPassword, String confirmPassword) {
         if(!confirmPassword.equals(newPassword)){
-            System.out.println("[WARN] Two passwords don't match!");
+            System.out.println("Two passwords don't match!");
             return false;
         }
         return changePassword(oldPassword, newPassword);
