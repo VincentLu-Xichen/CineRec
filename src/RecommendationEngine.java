@@ -79,7 +79,7 @@ public class RecommendationEngine {//Algorithm: Based on the proportion of user'
             }
             return Typenum;
         }
-        int secondsum=0;//sub is the value to补
+        int secondsum=0;// sub is the value to be filled
         int sub=0;
         for(String eachtype:Typenum.keySet()){//Calculate how many movies of each type should be recommended, return to Typenum
             int i=(int)Math.floor(Typenum.get(eachtype)/sum*10);

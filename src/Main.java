@@ -146,7 +146,7 @@ public class Main {
         }
     }
 
-    // 查看待看列表：基于 movieIds + findMovieById / View watchlist: based on movieIds + findMovieById
+    // View watchlist based on movieIds and findMovieById
     private static void viewWatchlist() {
         System.out.println("\n--- My Watchlist ---");
         Watchlist wl = currentUser.getWatchlist();

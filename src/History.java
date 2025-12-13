@@ -56,8 +56,8 @@ public class History {
                     String movieId = parts[0].trim();//eg:part[0]:MovieId:"M001"
                     String date = parts[1].trim();//eg:part[1]:date:"2025-07-12"
 
-                    // check if the same movie id already exists(without considering the date)
-                    boolean exists = false;//防止已经存在
+                    // check if the same movie id already exists (without considering the date)
+                    boolean exists = false;// prevent duplicates
                     for (Movie movie : getWatchedMovies()) {
                         if (movie.getId().equals(movieId)) {
                             exists = true;
